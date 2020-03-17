@@ -1,4 +1,5 @@
 import sys
+import json
 import pandas as pd
 df = pd.read_excel (r'/Users/wsonubi/Desktop/Deals_Desk_Project/CFBcron_Practice.xlsx', sheet_name='Deal_targeting_pratice')
 days = []
@@ -27,35 +28,39 @@ for i in range(len(df)):
     #appends the class to the list.
     days.append(Deals(day, publishers, placement_groups, placements))
 
-for profile in profiles:
-    endpoint = f"curlput profile?id={profile}&member_id=958"
-    print(endpoint)
 
+def target_profiles(days):
+    data = {}
 
-data = {}
-
-for day in days:
-    if(day.publishers): # MIGHT return false if empty
-        inventory_target = {}
-        # Create a dictionary for the curlput
-        # This is going to be parsed into JSON later
-        data = {
-                "profile": {
-                    "publisher_targets": []
-                    }
-                }
-        for publisher in day.publishers:
-            if publisher != 'nan':
-                inventory_target = {
-                        "action": "include",
-                        "deleted": False,
-                        "id": publisher
+    for day in days:
+        if(day.publishers): # MIGHT return false if empty
+            inventory_target = {}
+            # Create a dictionary for the curlput
+            # This is going to be parsed into JSON later
+            data = {
+                    "profile": {
+                        "publisher_targets": []
                         }
-                data["publisher_targets"].append(inventory_target)
-        break
+                    }
+            for publisher in day.publishers:
+                if publisher != 'nan':
+                    inventory_target = {
+                            "action": "include",
+                            "deleted": False,
+                            "id": publisher
+                            }
+                    data["profiles"]["publisher_targets"].append(inventory_target)
+            
+            print('Marshalling data -> JSON')
+            return json.dump(data)
 
-print(data)
+raw_data = target_profiles(days)
+print(raw_data)
 
+for profile in profiles:
+    endpoint = f"curlput profile?id={profile}&member_id=958 "
+    endpoint += raw_data
+    print(endpoint)
 """
 count = 0
 for day in days:
