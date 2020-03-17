@@ -31,11 +31,32 @@ for profile in profiles:
     endpoint = f"curlput profile?id={profile}&member_id=958"
     print(endpoint)
 
-#If publisher is null, check if
-def checks_inventory_to_target():
-    if day.publisher
 
+data = {}
 
+for day in days:
+    if(day.publishers): # MIGHT return false if empty
+        inventory_target = {}
+        # Create a dictionary for the curlput
+        # This is going to be parsed into JSON later
+        data = {
+                "profile": {
+                    "publisher_targets": []
+                    }
+                }
+        for publisher in day.publishers:
+            if publisher != 'nan':
+                inventory_target = {
+                        "action": "include",
+                        "deleted": False,
+                        "id": publisher
+                        }
+                data["publisher_targets"].append(inventory_target)
+        break
+
+print(data)
+
+"""
 count = 0
 for day in days:
     if len(day.publishers) > 0:
@@ -68,3 +89,4 @@ for day in days:
                     second_publisher_target = '{"action": "include", "deleted": false, "id":' + publisher + '}'
                     first_publisher_target = first_publisher_target + second_publisher_target
                     print(first_publisher_target + ']}}')
+"""
