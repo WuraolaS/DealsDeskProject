@@ -49,17 +49,53 @@ def target_profiles(days):
                             "deleted": False,
                             "id": publisher
                             }
-                    data["profiles"]["publisher_targets"].append(inventory_target)
+                    data["profile"]["publisher_targets"].append(inventory_target)
             
             print('Marshalling data -> JSON')
-            return json.dump(data)
+            return json.dumps(data)
+
+        if (day.placement_groups):
+            inventory_target= {}
+            data = {
+                "profile": {
+                    "site_targets": []
+                }
+            }
+            for placement_group in day.placement_groups:
+                if placement_group != 'nan':
+                    inventory_target = {
+                        "action": "include",
+                        "deleted": False,
+                        "id": placement_group
+                    }
+                    data["profile"]["site_targets"].append(inventory_target)
+            return json.dumps(data)
+        if (day.placements):
+            inventory_target = {}
+            data = {
+                "profile": {
+                    "placement_targets": []
+                }
+            }
+            for placement in day.placements:
+                if placement != 'nan':
+                    inventory_target = {
+                        "action": "include",
+                        "deleted": False,
+                        "id": placement
+                    }
+                    data["profile"]["placement_targets"].append(inventory_target)
+            return json.dumps(data)
+        print("error")
+        return
+
+
 
 raw_data = target_profiles(days)
 print(raw_data)
 
 for profile in profiles:
-    endpoint = f"curlput profile?id={profile}&member_id=958 "
-    endpoint += raw_data
+    endpoint = "curlput profile?id=" + profile + "&member_id=958 " + raw_data
     print(endpoint)
 """
 count = 0
@@ -95,3 +131,4 @@ for day in days:
                     first_publisher_target = first_publisher_target + second_publisher_target
                     print(first_publisher_target + ']}}')
 """
+
