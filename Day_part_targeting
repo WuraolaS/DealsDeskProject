@@ -1,0 +1,68 @@
+import sys
+import json
+import pandas as pd
+df = pd.read_excel (r'/Users/wsonubi/Desktop/Deals_Desk_Project/CFBcron_Practice.xlsx', sheet_name='Deal_targeting_pratice')
+days = []
+profiles = []
+
+for i in range(1, len(sys.argv)):
+    profiles.append(sys.argv[i])
+
+class Deals:
+    """description"""
+    def __init__(self, day, publishers, placement_groups, placements, start_time,end_time):
+        self.publishers = publishers
+        self.day = day
+        self.placement_groups = placement_groups
+        self.placements = placements
+        self.start_time  = start_time
+        self.end_time = end_time
+# Deals is indexed, the length of the list of deals = number of rows
+# What we're considering is the different days
+# For each row, create a new deal class
+
+
+for i in range(len(df)):
+    day = str(df["Day"][i])
+    publishers = str(df["Publisher"][i]).split(", ")
+    placement_groups = str(df["Placement Group"][i]).split(", ")
+    placements = str(df["Placement"][i]).split(", ")
+    start_time=str(df["Start Time"][i])
+    end_time=str(df["End Time"][i])
+    #appends the class to the list.
+    days.append(Deals(day, publishers, placement_groups, placements, start_time, end_time))
+
+
+#days = ["wednesday", "Thursday", "Friday"]
+
+day_part=[]
+for day in days:
+    day_tar2={
+        "day": day.day,
+        "start_hour": day.start_time,
+        "end_hour": day.end_time
+    }
+
+    #print(day_tar2)
+    day_part.append(day_tar2)
+
+data_array= {
+    "profile":
+        {
+            "day_parts": day_part
+
+        }
+    }
+    # day_tar={
+    #     "day": day.day,
+    #     "start_hour":"",
+    #     "end_hour":"1"
+    #
+    #
+    # }
+
+    # data_array["profile"]["day_parts"].append(day_tar2)
+    #after the day_tar dictionaries has been created add the start times from the column
+print(data_array)
+
+
