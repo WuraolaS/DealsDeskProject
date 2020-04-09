@@ -39,13 +39,12 @@ def target_profiles(days):
         }
 
     for day in days:
-        for day in days:
-            day_part={
-                "day": day.day,
-                "start_hour": day.start_time,
-                "end_hour": day.end_time
-            }
-            data["profile"]["daypart_targets"] = [day_part]
+        day_part={
+            "day": day.day,
+            "start_hour": day.start_time,
+            "end_hour": day.end_time
+        }
+        data["profile"]["daypart_targets"] = [day_part]
         if(day.publishers): # MIGHT return false if empty
             inventory_target = {}
             targets = []
@@ -75,9 +74,8 @@ def target_profiles(days):
                         "id": placement_group
                     }
                     targets.append(inventory_target)
-
                     data["profile"]["site_targets"] = targets
-            return json.dumps(data)
+                    return json.dumps(data)
         if (day.placements):
             inventory_target = {}
             targets=[]
@@ -143,4 +141,11 @@ for day in days:
                     first_publisher_target = first_publisher_target + second_publisher_target
                     print(first_publisher_target + ']}}')
 """
+
+#current ouptput
+# Marshalling data -> JSON
+# {"profile": {"daypart_targets": [{"day": "Wednesday", "start_hour": "1", "end_hour": "6"}], "publisher_targets": [{"action": "include", "deleted": false, "id": "1397847"}, {"action": "include", "deleted": false, "id": "1203307"}]}}
+# curlput 'profile?id=119576344&member_id=958' '{"profile": {"daypart_targets": [{"day": "Wednesday", "start_hour": "1", "end_hour": "6"}], "publisher_targets": [{"action": "include", "deleted": false, "id": "1397847"}, {"action": "include", "deleted": false, "id": "1203307"}]}}'
+# curlput 'profile?id=119576363&member_id=958' '{"profile": {"daypart_targets": [{"day": "Wednesday", "start_hour": "1", "end_hour": "6"}], "publisher_targets": [{"action": "include", "deleted": false, "id": "1397847"}, {"action": "include", "deleted": false, "id": "1203307"}]}}'
+#
 
